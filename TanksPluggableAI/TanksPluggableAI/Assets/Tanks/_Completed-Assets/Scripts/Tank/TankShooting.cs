@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;using UnityEngine;
 using UnityEngine.UI;
 
 namespace Complete
 {
     public class TankShooting : MonoBehaviour
     {
-        //ni chaiye
-//        public int m_PlayerNumber = 1;              // Used to identify the different players.
+        
+        //public int m_PlayerNumber = 1;              // Used to identify the different players.
         public Rigidbody m_Shell;                   // Prefab of the shell.
         public Transform m_FireTransform;           // A child of the tank where the shells are spawned.
         public Slider m_AimSlider;                  // A child of the tank that displays the current launch force.
-        public AudioSource m_ShootingAudio;         // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
-        public AudioClip m_ChargingClip;            // Audio that plays when each shot is charging up.
-        public AudioClip m_FireClip;                // Audio that plays when each shot is fired.
+        //public AudioSource m_ShootingAudio;         // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
+        //public AudioClip m_ChargingClip;            // Audio that plays when each shot is charging up.
+        //public AudioClip m_FireClip;                // Audio that plays when each shot is fired.
         public float m_MinLaunchForce = 15f;        // The force given to the shell if the fire button is not held.
         public float m_MaxLaunchForce = 30f;        // The force given to the shell if the fire button is held for the max charge time.
         public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
@@ -24,8 +25,8 @@ namespace Complete
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 		private float nextFireTime;
 
-        //humar kaam
-        public Button boomButton;
+        
+        
 
         private void OnEnable()
         {
@@ -38,16 +39,16 @@ namespace Complete
         private void Start ()
         {
             // The fire axis is based on the player number.
-            m_FireButton = "Fire1";// + m_PlayerNumber;
+            m_FireButton = "Fire1"; //+ m_PlayerNumber;
 
-            boomButton = GetComponent<Button>();
+            
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
         }
 
 
-        public void Update ()
+        public void Update()
         {
             // The slider should have a default value of the minimum launch force.
             m_AimSlider.value = m_MinLaunchForce;
@@ -60,18 +61,18 @@ namespace Complete
 				Fire (m_CurrentLaunchForce, 1);
             }
             // Otherwise, if the fire button has just started being pressed...
-            else if (Input.GetButtonDown (m_FireButton))
+            else if (SimpleInput.GetButtonDown (m_FireButton))
             {
                 // ... reset the fired flag and reset the launch force.
                 m_Fired = false;
                 m_CurrentLaunchForce = m_MinLaunchForce;
 
                 // Change the clip to the charging clip and start it playing.
-                m_ShootingAudio.clip = m_ChargingClip;
-                m_ShootingAudio.Play ();
+                //m_ShootingAudio.clip = m_ChargingClip;
+                //m_ShootingAudio.Play ();
             }
             // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
-            else if (Input.GetButton (m_FireButton) && !m_Fired)
+            else if (SimpleInput.GetButton (m_FireButton) && !m_Fired)
             {
                 // Increment the launch force and update the slider.
                 m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
@@ -79,7 +80,7 @@ namespace Complete
                 m_AimSlider.value = m_CurrentLaunchForce;
             }
             // Otherwise, if the fire button is released and the shell hasn't been launched yet...
-            else if (Input.GetButtonUp (m_FireButton) && !m_Fired)
+            else if (SimpleInput.GetButtonUp (m_FireButton) && !m_Fired)
             {
                 // ... launch the shell.
 				Fire (m_CurrentLaunchForce, 1);
@@ -104,8 +105,8 @@ namespace Complete
 				shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward; 
 
 				// Change the clip to the firing clip and play it.
-				m_ShootingAudio.clip = m_FireClip;
-				m_ShootingAudio.Play ();
+				//m_ShootingAudio.clip = m_FireClip;
+				//m_ShootingAudio.Play ();
 
 				// Reset the launch force.  This is a precaution in case of missing button events.
 				m_CurrentLaunchForce = m_MinLaunchForce;
